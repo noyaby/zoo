@@ -1,54 +1,51 @@
 package zoo;
+
 import java.io.*;
+import java.util.HashMap;
 import java.util.Scanner;
 
-public class Test
+public class Main
 {
-    /**
-     * Reads file word by word, creates an instance of an animal
-     * accordingly and prints its attributes.
-     *
-     * @param fileName The input file to read from.
-     * @return True if the whole file was read successfully, false otherwise.
-     */
-    public static boolean createAnimalsFromFile(String fileName)
+    public static void main(String[] args)
+    {
+        readFile(args[0]);
+
+    }
+
+    private static void readFile(String fileName)
     {
         File file = new File(fileName);
 
         try {
             Scanner sc = new Scanner(file);
             AnimalFactory factory = new AnimalFactory();
+            HashMap<String, Animal> animalMap = new HashMap<String, Animal>();
 
-            /** read next word and create instance until end of file.
-             * if the animal isn't valid - return false.
-             */
             while (sc.hasNext())
             {
-                Animal currentAnimal = factory.generateAnimal(sc.next());
-
-                if(currentAnimal == null)
-                {
-                    System.out.println("Error: Illegal name");
-                    return false;
-                }
-
-                currentAnimal.printName();
-                currentAnimal.printSound();
+                Animal currentAnimal = updateMap(sc.next(),factory, animalMap);
+                currentAnimal.printInfo();
             }
 
-            return true;
-
-        } catch(FileNotFoundException e)
-        {
-            // if file doesn't exist - print error message and return false
-            System.out.print("Error: unable to access file");
-            return false;
+        } catch (FileNotFoundException e) {
+            System.out.println("Error: file not found");
         }
+
     }
 
-
-    public static void main(String[] args)
+    static Animal updateMap(String animalName, AnimalFactory factory, HashMap<String, Animal> map)
     {
-        createAnimalsFromFile(args[0]);
+        try {
+            if (!map.containsKey(animalName))
+            {
+                Animal newAnimal = factory.generateAnimal(animalName);
+                map.put(animalName, newAnimal);
+            }
+
+        } catch (IllegalArgumentException e) {
+            System.out.println("Error: invalid input in file.");
+        }
+        return map.get(animalName);
     }
+
 }

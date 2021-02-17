@@ -1,6 +1,6 @@
 package zoo;
 
-interface Animal
+public interface Animal
 {
     default void printInfo()
     {

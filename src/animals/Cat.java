@@ -1,6 +1,8 @@
-package zoo;
+package animals;
 
-class Cat implements Animal
+import zoo.Animal;
+
+public class Cat implements Animal
 {
     public void printName()
     {

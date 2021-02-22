@@ -2,18 +2,37 @@ package zoo;
 
 import animals.*;
 import exceptions.NoSuchAnimalException;
+
 import java.util.*;
-import java.util.logging.Logger;
-import java.util.logging.Level;
-import java.util.logging.FileHandler;
 
 
-public class AnimalFactory
-{
+public class AnimalFactory {
 
-    HashMap<String, Animal> animalMap = new HashMap<>();
+    HashMap<String, Animal> animalMap = new HashMap<String, Animal>();
 
-    Animal generateAnimal(String animalName) throws NoSuchAnimalException
+    public List<Animal> generateAnimals(List<String> animalNames) throws NoSuchAnimalException
+    {
+        List<Animal> animals = new ArrayList<>();
+
+        for (String currentName : animalNames)
+        {
+            addAnimal(animals, currentName);
+        }
+
+        return animals;
+    }
+
+    private void addAnimal(List<Animal> animals, String currentName) throws NoSuchAnimalException {
+        if (!animalMap.containsKey(currentName))
+        {
+            Animal currentAnimal = createAnimal(currentName);
+            animalMap.put(currentName, currentAnimal);
+        }
+
+        animals.add(animalMap.get(currentName));
+    }
+
+    private Animal createAnimal(String animalName) throws NoSuchAnimalException
     {
         Animal newAnimal = switch (animalName) {
             case "Duck" -> new Duck();
@@ -24,32 +43,4 @@ public class AnimalFactory
 
         return newAnimal;
     }
-
-    public ArrayList<Animal> parseAnimals(ArrayList<String> animalNames)
-    {
-        ArrayList<Animal> animals = new ArrayList<>();
-        Iterator<String> iterator = animalNames.iterator();
-
-        try {
-
-            while(iterator.hasNext())
-            {
-                String currentName = iterator.next();
-
-                if (!animalMap.containsKey(currentName))
-                {
-                    Animal currentAnimal = generateAnimal(currentName);
-                    animalMap.put(currentName, currentAnimal);
-                }
-
-                animals.add(animalMap.get(currentName));
-            }
-
-        } catch (NoSuchAnimalException exception) {
-            System.out.println("Error: invalid input in file.");
-        }
-
-        return animals;
-    }
-
 }

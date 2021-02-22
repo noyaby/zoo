@@ -1,7 +1,14 @@
 package zoo;
 
-interface Animal
+public interface Animal
 {
+    default void printInfo()
+    {
+        printName();
+        printSound();
+    }
+
     void printName();
     void printSound();
+
 }

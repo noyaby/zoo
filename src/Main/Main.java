@@ -1,54 +1,36 @@
 package Main;
 
-import logger.LoggerTest;
+import exceptions.NoSuchAnimalException;
 import zoo.Animal;
 import zoo.AnimalFactory;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.*;
-import java.util.logging.Logger;
 
-public class Main
-{
-    static final int FIRST_ARGUMENT = 0;
+import static fileHandling.FileHandling.readFile;
 
-    public static void main(String[] args)
-    {
-        System.setProperty("java.util.logging.config.file",
-                "C:\\Program Files\\Java\\jdk-15.0.2\\conf\\logging.properties");
+public class Main {
 
-        LoggerTest logger = new LoggerTest();
-        AnimalFactory factory = new AnimalFactory();
-
-        ArrayList<String> animalNames = readFile(args[FIRST_ARGUMENT]);
-        ArrayList<Animal> animals = factory.parseAnimals(animalNames);
-        activateAnimals(animals);
-
-    }
-
-    private static ArrayList<String> readFile(String fileName)
-    {
-        File file = new File(fileName);
-        ArrayList<String> animalNames = new ArrayList<>();
+    public static void main(String[] args) {
+        final String FILE_PATH = args[0];
 
         try {
-            Scanner scanner = new Scanner(file);
+            AnimalFactory factory = new AnimalFactory();
 
-            while(scanner.hasNext())
-            {
-                animalNames.add(scanner.next());
-            }
+            List<String> animalNames = readFile(FILE_PATH);
+            List<Animal> animals = factory.generateAnimals(animalNames);
+            activateAnimals(animals);
 
-        } catch (FileNotFoundException exception) {
-            System.out.println("Error: file not found");
+        } catch (FileNotFoundException fileException) {
+            System.out.println("Error: No such file");
+        } catch (NoSuchAnimalException animalException) {
+            System.out.println("Error: No such animal");
         }
-
-        return animalNames;
     }
 
-    public static void activateAnimals(ArrayList<Animal> animals)
+    public static void activateAnimals(List<Animal> animals)
     {
-
         for (Animal nextAnimal : animals)
         {
             nextAnimal.printInfo();

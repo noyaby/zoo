@@ -8,7 +8,7 @@ import java.util.*;
 
 public class AnimalFactory {
 
-    HashMap<String, Animal> animalMap = new HashMap<String, Animal>();
+    HashMap<String, Animal> animalMap = new HashMap<>();
 
     public List<Animal> generateAnimals(List<String> animalNames) throws NoSuchAnimalException
     {
